@@ -1,6 +1,5 @@
 import React, { FC } from "react";
-import "./App.css";
-import { Login } from "./components/Login";
+import { Login } from "../components/Login";
 import { FaHeart } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
