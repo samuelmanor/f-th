@@ -1,4 +1,6 @@
 import React, { FC, FormEvent, useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { login } from "./userSlice";
 
 interface LoginProps {}
 
@@ -6,9 +8,11 @@ export const Login: FC<LoginProps> = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log({ name, email });
+    dispatch(login({ name, email }));
   };
 
   return (

@@ -1,19 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export interface UserState {
+  accessToken: string;
+  status: string;
+}
+
+const initialState: UserState = {
+  accessToken: "",
+  status: "idle",
+};
 
 const userReducer = createSlice({
   name: "user",
-  initialState: {
-    name: "",
-    email: "",
-  },
+  initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.name = action.payload.name;
-      state.email = action.payload.email;
+    setAccessToken: (state, action: PayloadAction<string>) => {
+      state.accessToken = action.payload;
     },
   },
 });
 
-export const { setUser } = userReducer.actions;
+export const { setAccessToken } = userReducer.actions;
+
+export const login = createAsyncThunk(
+  "user/login",
+  async (user: { name: string; email: string }) => {
+    console.log({ user });
+  }
+);
 
 export default userReducer.reducer;
