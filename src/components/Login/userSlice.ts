@@ -1,31 +1,52 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export interface UserState {
-  accessToken: string;
   status: string;
 }
 
 const initialState: UserState = {
-  accessToken: "",
   status: "idle",
 };
 
 const userReducer = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    setAccessToken: (state, action: PayloadAction<string>) => {
-      state.accessToken = action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(login.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(login.fulfilled, (state) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(login.rejected, (state) => {
+      state.status = "failed";
+    });
   },
 });
 
-export const { setAccessToken } = userReducer.actions;
+export const {} = userReducer.actions;
+
+const API_URL = "https://frontend-take-home-service.fetch.com";
 
 export const login = createAsyncThunk(
   "user/login",
-  async (user: { name: string; email: string }) => {
-    console.log({ user });
+  async (data: { name: string; email: string }) => {
+    let user = JSON.stringify(data);
+
+    let config = {
+      method: "post",
+      url: `${API_URL}/auth/login`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: user,
+      withCredentials: true,
+    };
+
+    const response = await axios.request(config);
+    return response.data;
   }
 );
 
