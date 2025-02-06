@@ -11,7 +11,7 @@ export const App: FC = () => {
         <IconContext.Provider value={{ color: "#ff00d3" }}>
           <FaHeart className="icon self-end mb-2" size="32px" />
         </IconContext.Provider>
-        <p className="text-7xl tracking-wider">shltr</p>
+        <p className="text-7xl tracking-wider select-none">shltr</p>
       </div>
       <Login />
     </div>
