@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export interface UserState {
-  status: string;
+  status: "idle" | "loading" | "failed" | "succeeded";
 }
 
 const initialState: UserState = {
