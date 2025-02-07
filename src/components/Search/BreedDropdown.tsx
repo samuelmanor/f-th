@@ -1,13 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
-import { getBreeds } from "./dogSlice";
+import { getBreeds, setBreedParams } from "./dogSlice";
 import { useAppDispatch } from "../../app/hooks";
 
-interface BreedDropdownProps {
-  // name: string;
-  // content: string[];
-}
-
-export const BreedDropdown: FC<BreedDropdownProps> = ({}) => {
+export const BreedDropdown: FC = () => {
   const [search, setSearch] = useState("");
   const [breeds, setBreeds] = useState<string[]>([]);
   const [displayedContent, setDisplayedContent] = useState<string[]>([]);
@@ -17,7 +12,6 @@ export const BreedDropdown: FC<BreedDropdownProps> = ({}) => {
   useEffect(() => {
     dispatch(getBreeds()).then((action) => {
       if (getBreeds.fulfilled.match(action)) {
-        console.log(action.payload);
         setBreeds(action.payload);
         setDisplayedContent(action.payload);
       }
@@ -25,9 +19,9 @@ export const BreedDropdown: FC<BreedDropdownProps> = ({}) => {
   }, []);
 
   return (
-    <div className="dropdown dropdown-hover">
+    <div className="dropdown dropdown">
       <div tabIndex={0} role="button" className="btn m-1">
-        Breeds
+        Breed
       </div>
       <ul
         tabIndex={0}
@@ -49,7 +43,11 @@ export const BreedDropdown: FC<BreedDropdownProps> = ({}) => {
         {displayedContent.map((item, i) => (
           <div key={i} className="flex flex-nowrap gap-1">
             <label className="label cursor-pointer">
-              <input type="checkbox" className="checkbox" />
+              <input
+                type="checkbox"
+                className="checkbox"
+                onChange={() => dispatch(setBreedParams(item))}
+              />
               <span className="label-text pl-2">{item}</span>
             </label>
           </div>
@@ -58,6 +56,3 @@ export const BreedDropdown: FC<BreedDropdownProps> = ({}) => {
     </div>
   );
 };
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}

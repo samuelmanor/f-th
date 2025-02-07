@@ -1,0 +1,34 @@
+import React, { FC, useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { setStateParams } from "./dogSlice";
+
+export const StateDropdown: FC = () => {
+  const [states, setStates] = useState("");
+
+  const dispatch = useAppDispatch();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStates(e.target.value);
+
+    dispatch(setStateParams(e.target.value));
+  };
+
+  return (
+    <div>
+      <div className="dropdown dropdown">
+        <div tabIndex={0} role="button" className="btn m-1">
+          State
+        </div>
+        <ul tabIndex={0} className="dropdown-content border flex-col w-56 p-2">
+          <p>Enter abbreviated form of state(s), separated by a comma:</p>
+          <input
+            type="text"
+            className="input input-bordered w-full p-2"
+            placeholder="ex. MI, WI, IL"
+            onChange={handleChange}
+          />
+        </ul>
+      </div>
+    </div>
+  );
+};
