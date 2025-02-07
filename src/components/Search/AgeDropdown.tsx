@@ -10,10 +10,14 @@ export const AgeDropdown = () => {
 
   const handleLowerBoundChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
+    setLowerBound(value);
+    dispatch(setAgeParams(value, upperBound));
   };
 
   const handleUpperBoundChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
+    setUpperBound(value);
+    dispatch(setAgeParams(lowerBound, value));
   };
 
   const clearInputs = () => {
