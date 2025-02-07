@@ -1,7 +1,17 @@
 import React, { FC, useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { setCityParams } from "./dogSlice";
 
 export const CityDropdown: FC = () => {
   const [city, setCity] = useState<string>("");
+
+  const dispatch = useAppDispatch();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCity(e.target.value);
+    dispatch(setCityParams(e.target.value));
+  };
+
   return (
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn m-1">
@@ -13,7 +23,7 @@ export const CityDropdown: FC = () => {
           type="text"
           className="input input-bordered w-full p-2"
           placeholder="Pawsville"
-          onChange={(e) => setCity(e.target.value)}
+          onChange={handleChange}
         />
       </ul>
     </div>

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { AppThunk, RootState } from "../../app/store";
+import { AppThunk, RootState, store } from "../../app/store";
 
 interface Params {
   breeds: string[];
@@ -147,5 +147,41 @@ export const getBreeds = createAsyncThunk("dogs/getBreeds", async () => {
     .get(API_URL + "/dogs/breeds", { withCredentials: true })
     .then((res) => res.data);
 });
+
+export const getDogs = createAsyncThunk(
+  "dogs/getDogs",
+  async (params: Params) => {
+    const queryParams = new URLSearchParams();
+
+    if (params.city || params.states) {
+      // get location data
+    }
+
+    if (params.breeds.length > 0) {
+      queryParams.append("breeds", params.breeds.join(","));
+    }
+
+    if (params.ageMin) {
+      queryParams.append("ageMin", params.ageMin.toString());
+    }
+
+    if (params.ageMax) {
+      queryParams.append("ageMax", params.ageMax.toString());
+    }
+
+    let config = {
+      method: "get",
+      url: `${API_URL}/dogs/search?${queryParams}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+
+    const response = await axios.request(config);
+    console.log(response.data);
+    return response.data;
+  }
+);
 
 export default dogReducer.reducer;

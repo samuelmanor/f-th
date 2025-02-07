@@ -5,11 +5,14 @@ import { FaSearch } from "react-icons/fa";
 import { AgeDropdown } from "./AgeDropdown";
 import { CityDropdown } from "./CityDropdown";
 import { StateDropdown } from "./StateDropdown";
+import { getDogs } from "./dogSlice";
 
 interface SearchProps {}
 
 export const Search: FC<SearchProps> = () => {
   const params = useAppSelector((state) => state.dogs.searchParams);
+
+  const dispatch = useAppDispatch();
 
   return (
     <div>
@@ -21,7 +24,7 @@ export const Search: FC<SearchProps> = () => {
           <CityDropdown />
           <StateDropdown />
         </div>
-        <div className="btn">
+        <div className="btn" onClick={() => dispatch(getDogs(params))}>
           <FaSearch size="18px" />
         </div>
       </div>
