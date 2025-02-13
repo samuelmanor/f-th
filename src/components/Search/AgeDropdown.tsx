@@ -2,6 +2,9 @@ import React, { ChangeEvent, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { setAgeParams } from "./dogSlice";
 
+/**
+ * Dropdown component for selecting age range.
+ */
 export const AgeDropdown = () => {
   const [lowerBound, setLowerBound] = useState<number>(0);
   const [upperBound, setUpperBound] = useState<number>(0);

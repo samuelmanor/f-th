@@ -2,6 +2,9 @@ import React, { FC, useEffect, useState } from "react";
 import { getBreeds, setBreedParams } from "./dogSlice";
 import { useAppDispatch } from "../../app/hooks";
 
+/**
+ * Dropdown component for selecting dog breeds.
+ */
 export const BreedDropdown: FC = () => {
   const [search, setSearch] = useState("");
   const [breeds, setBreeds] = useState<string[]>([]);

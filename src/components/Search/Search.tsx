@@ -9,10 +9,21 @@ import { getDogs } from "./dogSlice";
 
 interface SearchProps {}
 
+/**
+ * Search component for filtering dog search results.
+ * Includes dropdowns for breed, age, city, and state.
+ */
 export const Search: FC<SearchProps> = () => {
   const params = useAppSelector((state) => state.dogs.searchParams);
 
   const dispatch = useAppDispatch();
+
+  /**
+   * Dispatches the getDogs action with the current search parameters.
+   */
+  const handleSearch = () => {
+    dispatch(getDogs(params));
+  };
 
   return (
     <div>
@@ -24,7 +35,7 @@ export const Search: FC<SearchProps> = () => {
           <CityDropdown />
           <StateDropdown />
         </div>
-        <div className="btn" onClick={() => dispatch(getDogs(params))}>
+        <div className="btn" onClick={handleSearch}>
           <FaSearch size="18px" />
         </div>
       </div>

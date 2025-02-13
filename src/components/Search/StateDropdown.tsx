@@ -2,11 +2,17 @@ import React, { FC, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { setStateParams } from "./dogSlice";
 
+/**
+ * Dropdown component for selecting state.
+ */
 export const StateDropdown: FC = () => {
   const [states, setStates] = useState("");
 
   const dispatch = useAppDispatch();
 
+  /**
+   * Handles the change event for the state input.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStates(e.target.value);
 

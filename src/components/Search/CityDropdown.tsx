@@ -2,6 +2,9 @@ import React, { FC, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { setCityParams } from "./dogSlice";
 
+/**
+ * Dropdown component for selecting city.
+ */
 export const CityDropdown: FC = () => {
   const [city, setCity] = useState<string>("");
 

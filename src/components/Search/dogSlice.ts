@@ -10,10 +10,17 @@ interface Params {
   states: string | null;
 }
 
+interface SearchInfo {
+  nextPage: string | null;
+  prevPage: string | null;
+  total: number | null;
+}
+
 interface DogState {
   ids: string[];
   status: "idle" | "loading" | "failed";
   searchParams: Params;
+  searchInfo: SearchInfo;
 }
 
 const initialState: DogState = {
@@ -26,6 +33,11 @@ const initialState: DogState = {
     city: null,
     states: null,
   },
+  searchInfo: {
+    nextPage: null,
+    prevPage: null,
+    total: null,
+  },
 };
 
 const dogReducer = createSlice({
@@ -36,10 +48,13 @@ const dogReducer = createSlice({
       state.searchParams = action.payload;
       console.log(state.searchParams);
     },
+    setSearchInfo: (state, action: PayloadAction<SearchInfo>) => {
+      state.searchInfo = action.payload;
+    },
   },
 });
 
-export const {} = dogReducer.actions;
+export const { setSearchParams } = dogReducer.actions;
 
 const API_URL = "https://frontend-take-home-service.fetch.com";
 
@@ -148,6 +163,31 @@ export const getBreeds = createAsyncThunk("dogs/getBreeds", async () => {
     .then((res) => res.data);
 });
 
+/**
+ * Saves search information to the Redux store.
+ * @param {SearchInfo} info - The search information to save.
+ * @example
+ * ```
+ * saveSearchInfo({
+ *  nextPage: "https://example.com/next",
+ *  prevPage: "https://example.com/prev",
+ *  total: 100,
+ * })
+ * ```
+ */
+const saveSearchInfo = (info: SearchInfo): AppThunk => {
+  return (dispatch) => {
+    dispatch(
+      dogReducer.actions.setSearchInfo({
+        ...info,
+      })
+    );
+  };
+};
+
+/**
+ * Fetches dog data based on search parameters.
+ */
 export const getDogs = createAsyncThunk(
   "dogs/getDogs",
   async (params: Params) => {
@@ -171,7 +211,7 @@ export const getDogs = createAsyncThunk(
 
     let config = {
       method: "get",
-      url: `${API_URL}/dogs/search?${queryParams}`,
+      url: `${API_URL}/dogs/search?${queryParams}&from=25`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -180,6 +220,13 @@ export const getDogs = createAsyncThunk(
 
     const response = await axios.request(config);
     console.log(response.data);
+
+    saveSearchInfo({
+      nextPage: response.data.next,
+      prevPage: response.data.prev,
+      total: response.data.total,
+    });
+
     return response.data;
   }
 );
