@@ -51,6 +51,9 @@ const dogReducer = createSlice({
     setSearchInfo: (state, action: PayloadAction<SearchInfo>) => {
       state.searchInfo = action.payload;
     },
+    setIds: (state, action: PayloadAction<string[]>) => {
+      state.ids = action.payload;
+    },
   },
 });
 
@@ -175,13 +178,14 @@ export const getBreeds = createAsyncThunk("dogs/getBreeds", async () => {
  * })
  * ```
  */
-const saveSearchInfo = (info: SearchInfo): AppThunk => {
+const saveSearchInfo = (info: SearchInfo, ids: string[]): AppThunk => {
   return (dispatch) => {
     dispatch(
       dogReducer.actions.setSearchInfo({
         ...info,
       })
     );
+    dispatch(dogReducer.actions.setIds(ids));
   };
 };
 
@@ -221,11 +225,14 @@ export const getDogs = createAsyncThunk(
     const response = await axios.request(config);
     console.log(response.data);
 
-    saveSearchInfo({
-      nextPage: response.data.next,
-      prevPage: response.data.prev,
-      total: response.data.total,
-    });
+    saveSearchInfo(
+      {
+        nextPage: response.data.next,
+        prevPage: response.data.prev,
+        total: response.data.total,
+      },
+      response.data.resultIds
+    );
 
     return response.data;
   }

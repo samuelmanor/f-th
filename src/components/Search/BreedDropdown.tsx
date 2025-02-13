@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { getBreeds, setBreedParams } from "./dogSlice";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 /**
  * Dropdown component for selecting dog breeds.
@@ -9,6 +9,10 @@ export const BreedDropdown: FC = () => {
   const [search, setSearch] = useState("");
   const [breeds, setBreeds] = useState<string[]>([]);
   const [displayedContent, setDisplayedContent] = useState<string[]>([]);
+
+  const selectedBreeds = useAppSelector(
+    (state) => state.dogs.searchParams.breeds
+  );
 
   const dispatch = useAppDispatch();
 
@@ -22,13 +26,19 @@ export const BreedDropdown: FC = () => {
   }, []);
 
   return (
-    <div className="dropdown dropdown">
-      <div tabIndex={0} role="button" className="btn m-1">
+    <div className="dropdown">
+      <div
+        tabIndex={0}
+        role="button"
+        className={`btn m-1 ${
+          selectedBreeds.length > 0 ? "btn-secondary" : ""
+        }`}
+      >
         Breed
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu border flex-col gap-2 max-h-44 w-56 overflow-y-scroll overflow-x-hidden flex-nowrap"
+        className="dropdown-content menu border rounded-box flex-col gap-2 max-h-44 w-56 overflow-y-scroll overflow-x-hidden flex-nowrap"
       >
         <input
           type="text"
