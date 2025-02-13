@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { setStateParams } from "./dogSlice";
+import { setStateParams } from "../Dog/dogSlice";
 
 /**
  * Dropdown component for selecting state.
@@ -21,11 +21,14 @@ export const StateDropdown: FC = () => {
 
   return (
     <div>
-      <div className="dropdown dropdown">
+      <div className="dropdown">
         <div tabIndex={0} role="button" className="btn m-1">
           State
         </div>
-        <ul tabIndex={0} className="dropdown-content border flex-col w-56 p-2">
+        <ul
+          tabIndex={0}
+          className="dropdown-content rounded-box border flex-col w-56 p-2"
+        >
           <p>Enter abbreviated form of state(s), separated by a comma:</p>
           <input
             type="text"

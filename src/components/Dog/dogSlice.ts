@@ -2,6 +2,15 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { AppThunk, RootState, store } from "../../app/store";
 
+export interface Dog {
+  id: string;
+  img: string;
+  name: string;
+  age: number;
+  zip_code: string;
+  breed: string;
+}
+
 interface Params {
   breeds: string[];
   ageMin: number | null;
@@ -17,14 +26,18 @@ interface SearchInfo {
 }
 
 interface DogState {
-  ids: string[];
+  currentIds: string[];
+  currentDogs: Dog[];
+  savedIds: string[];
   status: "idle" | "loading" | "failed";
   searchParams: Params;
   searchInfo: SearchInfo;
 }
 
 const initialState: DogState = {
-  ids: [],
+  currentIds: [],
+  currentDogs: [],
+  savedIds: [],
   status: "idle",
   searchParams: {
     breeds: [],
@@ -48,12 +61,20 @@ const dogReducer = createSlice({
       state.searchParams = action.payload;
       console.log(state.searchParams);
     },
-    setSearchInfo: (state, action: PayloadAction<SearchInfo>) => {
-      state.searchInfo = action.payload;
-    },
-    setIds: (state, action: PayloadAction<string[]>) => {
-      state.ids = action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getDogIds.fulfilled, (state, action) => {
+      state.currentIds = action.payload.resultIds;
+      const searchInfo = {
+        nextPage: action.payload.next,
+        prevPage: action.payload.prev,
+        total: action.payload.total,
+      };
+      state.searchInfo = searchInfo;
+    });
+    builder.addCase(fetchDogs.fulfilled, (state, action) => {
+      state.currentDogs = action.payload;
+    });
   },
 });
 
@@ -166,34 +187,33 @@ export const getBreeds = createAsyncThunk("dogs/getBreeds", async () => {
     .then((res) => res.data);
 });
 
-/**
- * Saves search information to the Redux store.
- * @param {SearchInfo} info - The search information to save.
- * @example
- * ```
- * saveSearchInfo({
- *  nextPage: "https://example.com/next",
- *  prevPage: "https://example.com/prev",
- *  total: 100,
- * })
- * ```
- */
-const saveSearchInfo = (info: SearchInfo, ids: string[]): AppThunk => {
-  return (dispatch) => {
-    dispatch(
-      dogReducer.actions.setSearchInfo({
-        ...info,
-      })
-    );
-    dispatch(dogReducer.actions.setIds(ids));
-  };
-};
+export const fetchDogs = createAsyncThunk(
+  "dogs/fetchDogs",
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const ids = state.dogs.currentIds;
+
+    let config = {
+      method: "post",
+      url: `${API_URL}/dogs`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      data: ids,
+    };
+
+    const response = await axios.request(config);
+    console.log(response.data);
+    return response.data;
+  }
+);
 
 /**
  * Fetches dog data based on search parameters.
  */
-export const getDogs = createAsyncThunk(
-  "dogs/getDogs",
+export const getDogIds = createAsyncThunk(
+  "dogs/getDogIds",
   async (params: Params) => {
     const queryParams = new URLSearchParams();
 
@@ -225,14 +245,7 @@ export const getDogs = createAsyncThunk(
     const response = await axios.request(config);
     console.log(response.data);
 
-    saveSearchInfo(
-      {
-        nextPage: response.data.next,
-        prevPage: response.data.prev,
-        total: response.data.total,
-      },
-      response.data.resultIds
-    );
+    fetchDogs();
 
     return response.data;
   }

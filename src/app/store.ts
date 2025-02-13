@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import userReducer from "../components/Login/userSlice";
-import dogReducer from "../components/Search/dogSlice";
+import dogReducer from "../components/Dog/dogSlice";
 
 export const store = configureStore({
   reducer: {

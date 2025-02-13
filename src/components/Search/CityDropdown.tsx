@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { setCityParams } from "./dogSlice";
+import { setCityParams } from "../Dog/dogSlice";
 
 /**
  * Dropdown component for selecting city.
@@ -20,7 +20,10 @@ export const CityDropdown: FC = () => {
       <div tabIndex={0} role="button" className="btn m-1">
         City
       </div>
-      <ul tabIndex={0} className="dropdown-content border flex-col w-56 p-2">
+      <ul
+        tabIndex={0}
+        className="dropdown-content rounded-box border flex-col w-56 p-2"
+      >
         <p>Enter the name of a city:</p>
         <input
           type="text"

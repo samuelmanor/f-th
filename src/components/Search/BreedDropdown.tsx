@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { getBreeds, setBreedParams } from "./dogSlice";
+import { getBreeds, setBreedParams } from "../Dog/dogSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 /**
@@ -60,6 +60,7 @@ export const BreedDropdown: FC = () => {
                 type="checkbox"
                 className="checkbox"
                 onChange={() => dispatch(setBreedParams(item))}
+                checked={selectedBreeds.includes(item)}
               />
               <span className="label-text pl-2">{item}</span>
             </label>

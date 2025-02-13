@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAgeParams } from "./dogSlice";
+import { setAgeParams } from "../Dog/dogSlice";
 
 /**
  * Dropdown component for selecting age range.
@@ -49,7 +49,7 @@ export const AgeDropdown = () => {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content border gap-2 flex flex-col w-56 p-2"
+        className="dropdown-content rounded-box border gap-2 flex flex-col w-56 p-2"
       >
         <label className="input input-bordered input-sm flex items-center gap-2">
           from
