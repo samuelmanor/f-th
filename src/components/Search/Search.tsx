@@ -40,6 +40,18 @@ export const Search: FC<SearchProps> = () => {
   //   }
   // });
 
+  const handleNextPage = () => {
+    dispatch(
+      fetchDogs({ ...params, pagination: searchInfo.nextPage || undefined })
+    );
+  };
+
+  const handlePrevPage = () => {
+    dispatch(
+      fetchDogs({ ...params, pagination: searchInfo.prevPage || undefined })
+    );
+  };
+
   return (
     <div>
       <div className="flex items-center gap-4 justify-center py-2">
@@ -64,19 +76,27 @@ export const Search: FC<SearchProps> = () => {
         <>
           <div className="">
             <p>{searchInfo.total} results</p>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-4 grid-rows-5">
               {currentDogs.map((dog) => (
                 <DogCard key={dog.id} {...dog} />
               ))}
             </div>
           </div>
-          <div className="flex justify-center py-2">
-            <div className="join">
-              <button className="join-item btn" disabled={!searchInfo.prevPage}>
+          <div className="flex justify-center py-4">
+            <div className="join gap-6">
+              <button
+                className="join-item btn btn-md"
+                disabled={!searchInfo.prevPage}
+                onClick={handlePrevPage}
+              >
                 «
               </button>
-              <button className="join-item btn">Page 2</button>
-              <button className="join-item btn" disabled={!searchInfo.nextPage}>
+              <button className="join-item cursor-default">Page 2</button>
+              <button
+                className="join-item btn btn-md"
+                disabled={!searchInfo.nextPage}
+                onClick={handleNextPage}
+              >
                 »
               </button>
             </div>

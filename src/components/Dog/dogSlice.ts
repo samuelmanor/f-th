@@ -17,6 +17,7 @@ interface Params {
   ageMax: number | null;
   city: string | null;
   states: string | null;
+  pagination?: string;
 }
 
 interface SearchInfo {
@@ -236,7 +237,9 @@ export const fetchDogs = createAsyncThunk(
     // get ids of dogs that match search params
     let idsRequestConfig = {
       method: "get",
-      url: `${API_URL}/dogs/search?${queryParams}`,
+      url: params.pagination
+        ? API_URL + params.pagination
+        : `${API_URL}/dogs/search?${queryParams}`,
       headers: {
         "Content-Type": "application/json",
       },
