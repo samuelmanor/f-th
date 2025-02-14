@@ -10,33 +10,26 @@ export const Pagination: FC = () => {
   const dogIds = useAppSelector((state) => state.dogs.currentIds);
   const params = useAppSelector((state) => state.dogs.searchParams);
   const searchInfo = useAppSelector((state) => state.dogs.searchInfo);
+  const searchStatus = useAppSelector((state) => state.dogs.status);
 
   const dispatch = useAppDispatch();
 
   /**
-   * Dispatches the fetchDogs action with the current search parameters and scrolls to the top.
+   * Dispatches the fetchDogs action with the current search parameters.
    */
   const handleNextPage = () => {
     dispatch(
       fetchDogs({ ...params, pagination: searchInfo.nextPage || undefined })
     );
-
-    setTimeout(() => {
-      window.scrollTo({ top: 0 });
-    }, 500);
   };
 
   /**
-   * Dispatches the fetchDogs action with the current search parameters and scrolls to the top.
+   * Dispatches the fetchDogs action with the current search parameters.
    */
   const handlePrevPage = () => {
     dispatch(
       fetchDogs({ ...params, pagination: searchInfo.prevPage || undefined })
     );
-
-    setTimeout(() => {
-      window.scrollTo({ top: 0 });
-    }, 500);
   };
 
   useEffect(() => {
@@ -47,6 +40,12 @@ export const Pagination: FC = () => {
       }
     }
   }, [dogIds]);
+
+  useEffect(() => {
+    if (searchStatus === "idle") {
+      window.scrollTo({ top: 0 });
+    }
+  }, [searchStatus]);
 
   return (
     <>

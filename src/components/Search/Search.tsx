@@ -54,7 +54,7 @@ export const Search: FC<SearchProps> = () => {
         <>
           <div className="">
             <p>{searchInfo.total} results</p>
-            <div className="grid grid-cols-5 gap-4 grid-rows-5">
+            <div className="grid grid-cols-3 gap-4">
               {currentDogs.map((dog) => (
                 <DogCard key={dog.id} {...dog} />
               ))}
