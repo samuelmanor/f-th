@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { BreedDropdown } from "./BreedDropdown";
 import { FaSearch } from "react-icons/fa";
@@ -16,10 +16,7 @@ interface SearchProps {}
  * Includes dropdowns for breed, age, city, and state.
  */
 export const Search: FC<SearchProps> = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-
   const params = useAppSelector((state) => state.dogs.searchParams);
-  const dogIds = useAppSelector((state) => state.dogs.currentIds);
   const currentDogs = useAppSelector((state) => state.dogs.currentDogs);
   const searchInfo = useAppSelector((state) => state.dogs.searchInfo);
   const searchStatus = useAppSelector((state) => state.dogs.status);
@@ -32,35 +29,6 @@ export const Search: FC<SearchProps> = () => {
   const handleSearch = () => {
     dispatch(fetchDogs(params));
   };
-
-  const handleNextPage = () => {
-    dispatch(
-      fetchDogs({ ...params, pagination: searchInfo.nextPage || undefined })
-    );
-
-    setTimeout(() => {
-      window.scrollTo({ top: 0 });
-    }, 10);
-  };
-
-  const handlePrevPage = () => {
-    dispatch(
-      fetchDogs({ ...params, pagination: searchInfo.prevPage || undefined })
-    );
-
-    setTimeout(() => {
-      window.scrollTo({ top: 0 });
-    }, 10);
-  };
-
-  useEffect(() => {
-    if (searchInfo.total) {
-      const from = new URLSearchParams(searchInfo.nextPage || "").get("from");
-      if (from) {
-        setCurrentPage(Number(from) / 25);
-      }
-    }
-  }, [dogIds]);
 
   return (
     <div>
