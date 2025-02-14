@@ -7,6 +7,7 @@ import { CityDropdown } from "./CityDropdown";
 import { StateDropdown } from "./StateDropdown";
 import { fetchDogs } from "../Dog/dogSlice";
 import { DogCard } from "../Dog";
+import { Pagination } from "./Pagination";
 
 interface SearchProps {}
 
@@ -91,29 +92,7 @@ export const Search: FC<SearchProps> = () => {
               ))}
             </div>
           </div>
-          <div className="flex justify-center py-4">
-            <div className="join gap-6">
-              <button
-                className="join-item btn btn-md"
-                disabled={currentPage * 25 === 25}
-                onClick={handlePrevPage}
-              >
-                «
-              </button>
-              <button className="join-item cursor-default">
-                {currentPage}
-              </button>
-              <button
-                className="join-item btn btn-md"
-                disabled={
-                  searchInfo.total ? currentPage * 25 >= searchInfo.total : true
-                }
-                onClick={handleNextPage}
-              >
-                »
-              </button>
-            </div>
-          </div>
+          <Pagination />
         </>
       ) : null}
     </div>
