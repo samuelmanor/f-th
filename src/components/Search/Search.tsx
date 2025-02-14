@@ -15,10 +15,11 @@ interface SearchProps {}
  * Includes dropdowns for breed, age, city, and state.
  */
 export const Search: FC<SearchProps> = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const params = useAppSelector((state) => state.dogs.searchParams);
   const dogIds = useAppSelector((state) => state.dogs.currentIds);
   const currentDogs = useAppSelector((state) => state.dogs.currentDogs);
-  // const total = useAppSelector((state) => state.dogs.searchInfo.total);
   const searchInfo = useAppSelector((state) => state.dogs.searchInfo);
   const searchStatus = useAppSelector((state) => state.dogs.status);
 
@@ -29,28 +30,36 @@ export const Search: FC<SearchProps> = () => {
    */
   const handleSearch = () => {
     dispatch(fetchDogs(params));
-    // .then(() => {
-    //   dispatch(fetchDogs());
-    // });
   };
-
-  // useEffect(() => {
-  //   if (dogIds.length > 0) {
-  //     dispatch(fetchDogs());
-  //   }
-  // });
 
   const handleNextPage = () => {
     dispatch(
       fetchDogs({ ...params, pagination: searchInfo.nextPage || undefined })
     );
+
+    setTimeout(() => {
+      window.scrollTo({ top: 0 });
+    }, 10);
   };
 
   const handlePrevPage = () => {
     dispatch(
       fetchDogs({ ...params, pagination: searchInfo.prevPage || undefined })
     );
+
+    setTimeout(() => {
+      window.scrollTo({ top: 0 });
+    }, 10);
   };
+
+  useEffect(() => {
+    if (searchInfo.total) {
+      const from = new URLSearchParams(searchInfo.nextPage || "").get("from");
+      if (from) {
+        setCurrentPage(Number(from) / 25);
+      }
+    }
+  }, [dogIds]);
 
   return (
     <div>
@@ -86,15 +95,19 @@ export const Search: FC<SearchProps> = () => {
             <div className="join gap-6">
               <button
                 className="join-item btn btn-md"
-                disabled={!searchInfo.prevPage}
+                disabled={currentPage * 25 === 25}
                 onClick={handlePrevPage}
               >
                 «
               </button>
-              <button className="join-item cursor-default">Page 2</button>
+              <button className="join-item cursor-default">
+                {currentPage}
+              </button>
               <button
                 className="join-item btn btn-md"
-                disabled={!searchInfo.nextPage}
+                disabled={
+                  searchInfo.total ? currentPage * 25 >= searchInfo.total : true
+                }
                 onClick={handleNextPage}
               >
                 »
