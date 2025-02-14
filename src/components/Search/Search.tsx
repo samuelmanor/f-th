@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { AgeDropdown } from "./AgeDropdown";
 import { CityDropdown } from "./CityDropdown";
 import { StateDropdown } from "./StateDropdown";
-import { fetchDogs, getDogIds } from "../Dog/dogSlice";
+import { fetchDogs } from "../Dog/dogSlice";
 import { DogCard } from "../Dog";
 
 interface SearchProps {}
@@ -25,9 +25,10 @@ export const Search: FC<SearchProps> = () => {
    * Dispatches the getDogs action with the current search parameters.
    */
   const handleSearch = () => {
-    dispatch(getDogIds(params)).then(() => {
-      dispatch(fetchDogs());
-    });
+    dispatch(fetchDogs(params));
+    // .then(() => {
+    //   dispatch(fetchDogs());
+    // });
   };
 
   // useEffect(() => {

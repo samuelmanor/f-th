@@ -63,17 +63,15 @@ const dogReducer = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getDogIds.fulfilled, (state, action) => {
+    builder.addCase(fetchDogs.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.currentIds = action.payload.resultIds;
-      const searchInfo = {
+      state.searchInfo = {
         nextPage: action.payload.next,
         prevPage: action.payload.prev,
         total: action.payload.total,
       };
-      state.searchInfo = searchInfo;
-    });
-    builder.addCase(fetchDogs.fulfilled, (state, action) => {
-      state.currentDogs = action.payload;
+      state.currentDogs = action.payload.dogs;
     });
   },
 });
@@ -84,6 +82,10 @@ const API_URL = "https://frontend-take-home-service.fetch.com";
 
 export const selectParams = (state: RootState) => state.dogs.searchParams;
 
+/**
+ * Sets the breed parameters for the search.
+ * @param breed - The breed to set.
+ */
 export const setBreedParams = (breed: string): AppThunk => {
   return (dispatch, getState) => {
     const currentParams = selectParams(getState());
@@ -106,6 +108,11 @@ export const setBreedParams = (breed: string): AppThunk => {
   };
 };
 
+/**
+ * Sets the age parameters for the search.
+ * @param ageMin - The minimum age.
+ * @param ageMax - The maximum age.
+ */
 export const setAgeParams = (ageMin: number, ageMax: number): AppThunk => {
   return (dispatch, getState) => {
     const currentParams = selectParams(getState());
@@ -140,6 +147,10 @@ export const setAgeParams = (ageMin: number, ageMax: number): AppThunk => {
   };
 };
 
+/**
+ * Sets the city parameter for the search.
+ * @param city - The city to set.
+ */
 export const setCityParams = (city: string): AppThunk => {
   return (dispatch, getState) => {
     const currentParams = selectParams(getState());
@@ -152,6 +163,10 @@ export const setCityParams = (city: string): AppThunk => {
   };
 };
 
+/**
+ * Sets the state parameters for the search.
+ * @param states - A comma-separated string of state abbreviations.
+ */
 export const setStateParams = (states: string): AppThunk => {
   return (dispatch, getState) => {
     const currentParams = selectParams(getState());
@@ -181,39 +196,20 @@ export const setStateParams = (states: string): AppThunk => {
   };
 };
 
+/**
+ * Fetches dog breeds from the API.
+ */
 export const getBreeds = createAsyncThunk("dogs/getBreeds", async () => {
   return axios
     .get(API_URL + "/dogs/breeds", { withCredentials: true })
     .then((res) => res.data);
 });
 
-export const fetchDogs = createAsyncThunk(
-  "dogs/fetchDogs",
-  async (_, { getState }) => {
-    const state = getState() as RootState;
-    const ids = state.dogs.currentIds;
-
-    let config = {
-      method: "post",
-      url: `${API_URL}/dogs`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-      data: ids,
-    };
-
-    const response = await axios.request(config);
-    console.log(response.data);
-    return response.data;
-  }
-);
-
 /**
  * Fetches dog data based on search parameters.
  */
-export const getDogIds = createAsyncThunk(
-  "dogs/getDogIds",
+export const fetchDogs = createAsyncThunk(
+  "dogs/fetchDogs",
   async (params: Params) => {
     const queryParams = new URLSearchParams();
 
@@ -233,7 +229,8 @@ export const getDogIds = createAsyncThunk(
       queryParams.append("ageMax", params.ageMax.toString());
     }
 
-    let config = {
+    // get ids of dogs that match search params
+    let idsRequestConfig = {
       method: "get",
       url: `${API_URL}/dogs/search?${queryParams}&from=25`,
       headers: {
@@ -242,12 +239,29 @@ export const getDogIds = createAsyncThunk(
       withCredentials: true,
     };
 
-    const response = await axios.request(config);
-    console.log(response.data);
+    const ids = await axios.request(idsRequestConfig).then((res) => res.data);
 
-    fetchDogs();
+    // get dog data from ids, plus pagination
+    let dogsRequestConfig = {
+      method: "post",
+      url: `${API_URL}/dogs`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      data: ids.resultIds,
+    };
 
-    return response.data;
+    const dogs = await axios.request(dogsRequestConfig).then((res) => res.data);
+    const result = {
+      resultIds: ids.resultIds,
+      next: ids.next,
+      prev: ids.prev,
+      total: ids.total,
+      dogs: dogs,
+    };
+
+    return result;
   }
 );
 
