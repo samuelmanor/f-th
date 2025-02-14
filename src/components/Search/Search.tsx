@@ -18,6 +18,9 @@ export const Search: FC<SearchProps> = () => {
   const params = useAppSelector((state) => state.dogs.searchParams);
   const dogIds = useAppSelector((state) => state.dogs.currentIds);
   const currentDogs = useAppSelector((state) => state.dogs.currentDogs);
+  // const total = useAppSelector((state) => state.dogs.searchInfo.total);
+  const searchInfo = useAppSelector((state) => state.dogs.searchInfo);
+  const searchStatus = useAppSelector((state) => state.dogs.status);
 
   const dispatch = useAppDispatch();
 
@@ -39,7 +42,7 @@ export const Search: FC<SearchProps> = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 justify-center py-2">
         <p>search by:</p>
         <div className="flex flex-nowrap">
           <BreedDropdown />
@@ -52,11 +55,34 @@ export const Search: FC<SearchProps> = () => {
         </div>
       </div>
       {/* <div onClick={() => console.log(dogIds)}>jdkashfsla</div> */}
-      <div className="grid grid-cols-5 gap-4">
-        {currentDogs.map((dog) => (
-          <DogCard key={dog.id} {...dog} />
-        ))}
-      </div>
+      {searchStatus === "loading" ? (
+        <div className="flex justify-center py-2">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : null}
+      {currentDogs.length > 0 ? (
+        <>
+          <div className="">
+            <p>{searchInfo.total} results</p>
+            <div className="grid grid-cols-5 gap-4">
+              {currentDogs.map((dog) => (
+                <DogCard key={dog.id} {...dog} />
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center py-2">
+            <div className="join">
+              <button className="join-item btn" disabled={!searchInfo.prevPage}>
+                «
+              </button>
+              <button className="join-item btn">Page 2</button>
+              <button className="join-item btn" disabled={!searchInfo.nextPage}>
+                »
+              </button>
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };

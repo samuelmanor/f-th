@@ -10,7 +10,7 @@ export const App: FC = () => {
 
   return (
     <div className="bg-base-200 min-h-screen flex flex-col items-center justify-center">
-      <div className="flex gap-3">
+      <div className="flex gap-3 pt-3">
         <IconContext.Provider value={{ color: "#ff00d3" }}>
           <FaHeart className="icon self-end mb-2" size="32px" />
         </IconContext.Provider>

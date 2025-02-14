@@ -21,13 +21,19 @@ export const AgeDropdown = () => {
   const handleLowerBoundChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(validateInput(e.target.value));
     setLowerBound(value);
-    dispatch(setAgeParams(value, upperBound));
+
+    if (value !== lowerBound) {
+      dispatch(setAgeParams(value, upperBound));
+    }
   };
 
   const handleUpperBoundChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(validateInput(e.target.value));
     setUpperBound(value);
-    dispatch(setAgeParams(lowerBound, value));
+
+    if (value !== upperBound) {
+      dispatch(setAgeParams(lowerBound, value));
+    }
   };
 
   const clearInputs = () => {
@@ -49,7 +55,7 @@ export const AgeDropdown = () => {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content rounded-box border gap-2 flex flex-col w-56 p-2"
+        className="dropdown-content rounded-box border gap-2 flex flex-col w-56 p-2 z-10 bg-base-200"
       >
         <label className="input input-bordered input-sm flex items-center gap-2">
           from

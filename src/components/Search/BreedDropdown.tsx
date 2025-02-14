@@ -38,7 +38,7 @@ export const BreedDropdown: FC = () => {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu border rounded-box flex-col gap-2 max-h-44 w-56 overflow-y-scroll overflow-x-hidden flex-nowrap"
+        className="dropdown-content menu border rounded-box flex-col gap-2 max-h-44 w-56 overflow-y-scroll overflow-x-hidden flex-nowrap z-10 bg-base-200"
       >
         <input
           type="text"

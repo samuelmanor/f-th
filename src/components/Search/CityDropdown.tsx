@@ -22,7 +22,7 @@ export const CityDropdown: FC = () => {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content rounded-box border flex-col w-56 p-2"
+        className="dropdown-content rounded-box border flex-col w-56 p-2 z-10 bg-base-200"
       >
         <p>Enter the name of a city:</p>
         <input

@@ -65,6 +65,7 @@ const dogReducer = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchDogs.fulfilled, (state, action) => {
       console.log(action.payload);
+      state.status = "idle";
       state.currentIds = action.payload.resultIds;
       state.searchInfo = {
         nextPage: action.payload.next,
@@ -72,6 +73,9 @@ const dogReducer = createSlice({
         total: action.payload.total,
       };
       state.currentDogs = action.payload.dogs;
+    });
+    builder.addCase(fetchDogs.pending, (state) => {
+      state.status = "loading";
     });
   },
 });
@@ -232,7 +236,7 @@ export const fetchDogs = createAsyncThunk(
     // get ids of dogs that match search params
     let idsRequestConfig = {
       method: "get",
-      url: `${API_URL}/dogs/search?${queryParams}&from=25`,
+      url: `${API_URL}/dogs/search?${queryParams}`,
       headers: {
         "Content-Type": "application/json",
       },
