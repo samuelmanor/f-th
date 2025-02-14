@@ -223,7 +223,9 @@ export const fetchDogs = createAsyncThunk(
     }
 
     if (params.breeds.length > 0) {
-      queryParams.append("breeds", params.breeds.join(","));
+      params.breeds.forEach((breed) => {
+        queryParams.append("breeds", breed);
+      });
     }
 
     if (params.ageMin) {
